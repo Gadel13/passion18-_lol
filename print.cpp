@@ -10,7 +10,7 @@ int main (int argc, char** argv)
 		return 1;
 	}
 
-	ifstream pr(argv[1], ios_base::in);
+	ifstream pr(argv[1], ios::binary);
 
 	if(!pr.is_open())
 	{	
@@ -20,15 +20,18 @@ int main (int argc, char** argv)
 
 	char c;
 
-	pr >> c;
+	pr.read((char*)&c, sizeof(char) );
+	//pr >> c;
 	cout << c << " ";
 
 	int n,m;
 
-	pr >> n;
+	pr.read((char*)&n, sizeof(int) );
+	//pr >> n;
 	cout << n << " ";
 
-	pr >> m;
+	pr.read((char*)&m, sizeof(int) );
+	//pr >> m;
 	cout << m << " " << endl;
 
 	double k;
@@ -37,7 +40,8 @@ int main (int argc, char** argv)
 	{
 		for(int j = 1; j <= m; j++)
 		{
-			pr >> k;
+			pr.read((char*)&k, sizeof(double) );
+			//pr >> k;
 			cout << k << " " ;
 		}
 		cout << endl;

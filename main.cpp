@@ -16,7 +16,7 @@ int main (int argc, char** argv) // /.main A.dat B.dat C.dat <mode>
 		return 1;
 	}
 
-	ifstream A(argv[1], ios_base::in);
+	ifstream A(argv[1], ios_base::binary);
 
 	if(!A.is_open())
 	{	
@@ -24,7 +24,7 @@ int main (int argc, char** argv) // /.main A.dat B.dat C.dat <mode>
 		return 1;
 	}
 
-	ifstream B(argv[2], ios_base::in);
+	ifstream B(argv[2], ios_base::binary);
 
 	if(!B.is_open())
 	{	
@@ -34,13 +34,16 @@ int main (int argc, char** argv) // /.main A.dat B.dat C.dat <mode>
 
 	char type1,type2;
 
-	A >> type1;
-	B >> type2;
+	A.read((char*)&type1,sizeof(char));
+	B.read((char*)&type2,sizeof(char));
 
 	int n1,m1,n2,m2;
 
-	A >> n1 >> m1;
-	B >> n2 >> m2;
+	A.read((char*)&n1,sizeof(int));
+	A.read((char*)&m1,sizeof(int));
+
+	B.read((char*)&n2,sizeof(int));
+	B.read((char*)&m2,sizeof(int));
 
 	if ( m1 != n2 )
 	{
@@ -49,59 +52,24 @@ int main (int argc, char** argv) // /.main A.dat B.dat C.dat <mode>
 		return 1;
 	}
 
-	//if (type1 == 'd')
-	//{
+	if (type1 == type2 && type1 == 'd')
+	{
 		double **mA;
 		mA = new double*[n1];
 		for (int i = 0; i < n1; i++)
 			mA[i] = new double[m1];
 		for (int i = 0; i < n1; i++)
 			for (int j = 0; j < m1; j++)
-				A >> mA[i][j];
-	// } else
-	// 	if(type1 == 'f')
-	// 	{
-	// 		float **mA;
-	// 		mA = new float*[n1];
-	// 		for (int i = 0; i < n1; i++)
-	// 			mA[i] = new float[m1];
-	// 		for (int i = 0; i < n1; i++)
-	// 			for (int j = 0; j < m1; j++)
-	// 				A >> mA[i][j];
-	// 	} else
-	// 	{
-	// 		cout << "ERROR incorrect type of matrix A" << endl;
-	// 		return 1;
-	// 	}
+				A.read((char*)&mA[i][j],sizeof(double));
 
-
-	//if (type1 == 'd')
-	//{
 		double **mB;
 		mB = new double*[n2];
 		for (int i = 0; i < n2; i++)
 			mB[i] = new double[m2];
 		for (int i = 0; i < n2; i++)
 			for (int j = 0; j < m2; j++)
-				B >> mB[i][j];
-	// } else
-	// 	if(type1 == 'f')
-	// 	{
-	// 		float **mB;
-	// 		mB = new float*[n2];
-	// 		for (int i = 0; i < n2; i++)
-	// 			mB[i] = new float[m2];
-	// 		for (int i = 0; i < n2; i++)
-	// 			for (int j = 0; j < m2; j++)
-	// 				B >> mB[i][j];
-	// 	} else
-	// 	{
-	// 		cout << "ERROR incorrect type of matrix B" << endl;
-	// 		return 1;
-	// 	}
+				B.read((char*)&mB[i][j],sizeof(double));
 
-	//if ( type1 == 'd' || type2 == 'd' )
-	//{
 		double **mC;
 		mC = new double*[n1];
 		for (int i = 0; i < n1; i++)
@@ -109,95 +77,195 @@ int main (int argc, char** argv) // /.main A.dat B.dat C.dat <mode>
 		for (int i = 0; i < n1; i++)
 			for (int j = 0; j < m2; j++)
 				mC[i][j] = 0;
-	// } else
-	// {
-	// 	float **mC;
-	// 	mC = new float*[n1];
-	// 	for (int i = 0; i < n1; i++)
-	// 		mC[i] = new float[m2];
-	// 	for (int i = 0; i < n2; i++)
-	// 		for (int j = 0; j < m2; j++)
-	// 			mC[i][j] = 0;
-	// }
 
-	ofstream TIME("DATA.txt", ios::in|ios::app);
-	int i,j,k;
-	clock_t start,stop;
+		ofstream TIME("DATA.txt", ios::in|ios::app);
+		int i,j,k;
+		clock_t start,stop;
 
-	switch ( atoi(argv[4]) )
+		switch ( atoi(argv[4]) )
+		{
+			case 0:
+			{
+				start = clock();
+				multmatr(i, n1, j, m2, k, m1,mA,mB,mC);
+				stop = clock();
+				TIME << "0-ijk ";
+				break;
+			}
+			case 1:
+			{
+				start = clock();
+				multmatr(i, n1, k, m1, j, m2,mA,mB,mC);
+				stop = clock();
+				TIME << "1-ikj ";
+				break;
+			}
+			case 2:
+			{
+				start = clock();
+				multmatr(k, m1, i, n1, j, m2,mA,mB,mC);
+				stop = clock();
+				TIME << "2-kij ";
+				break;
+			}
+			case 3:
+			{
+				start = clock();
+				multmatr(j, m2, i, n1, k, m1,mA,mB,mC);
+				stop = clock();
+				TIME << "3-jik ";
+				break;
+			}
+			case 4:
+			{
+				start = clock();
+				multmatr(j, m2, k, m1, i, n1,mA,mB,mC);
+				stop = clock();
+				TIME << "4-jki ";
+				break;
+			}
+			case 5:
+			{
+				start = clock();
+				multmatr(k, m1, j, m2, i, n1,mA,mB,mC);
+				stop = clock();
+				TIME << "5-kji ";
+				break;
+			}
+		}
+
+
+		TIME << (double)(stop-start)/CLOCKS_PER_SEC << "\n";
+
+		TIME.close();
+
+
+
+		ofstream rez(argv[3],ios::binary);
+		char c = 'd';
+		rez.write((char*)&c, sizeof(char) );
+		
+		rez.write((char*)&n1, sizeof(int) );
+		rez.write((char*)&m2, sizeof(int) );
+
+		for (i = 0; i < n1; i++)
+		{
+			for (j = 0; j < m2; j++)
+				rez.write((char*)&mC[i][j], sizeof(double) );
+		}
+
+		rez.close();
+
+	} else
+		if (type1 == type2 && type1 == 'f')
 	{
-		case 0:
+		float **mA;
+		mA = new float*[n1];
+		for (int i = 0; i < n1; i++)
+			mA[i] = new float[m1];
+		for (int i = 0; i < n1; i++)
+			for (int j = 0; j < m1; j++)
+				A.read((char*)&mA[i][j],sizeof(float));
+
+		float **mB;
+		mB = new float*[n2];
+		for (int i = 0; i < n2; i++)
+			mB[i] = new float[m2];
+		for (int i = 0; i < n2; i++)
+			for (int j = 0; j < m2; j++)
+				B.read((char*)&mB[i][j],sizeof(float));
+
+		float **mC;
+		mC = new float*[n1];
+		for (int i = 0; i < n1; i++)
+			mC[i] = new float[m2];
+		for (int i = 0; i < n1; i++)
+			for (int j = 0; j < m2; j++)
+				mC[i][j] = 0;
+
+		ofstream TIME("DATA.txt", ios::in|ios::app);
+		int i,j,k;
+		clock_t start,stop;
+
+		switch ( atoi(argv[4]) )
 		{
-			start = clock();
-			multmatr(i, n1, j, m2, k, m1,mA,mB,mC);
-			stop = clock();
-			TIME << "0-ijk ";
-			break;
+			case 0:
+			{
+				start = clock();
+				multmatr(i, n1, j, m2, k, m1,mA,mB,mC);
+				stop = clock();
+				TIME << "0-ijk ";
+				break;
+			}
+			case 1:
+			{
+				start = clock();
+				multmatr(i, n1, k, m1, j, m2,mA,mB,mC);
+				stop = clock();
+				TIME << "1-ikj ";
+				break;
+			}
+			case 2:
+			{
+				start = clock();
+				multmatr(k, m1, i, n1, j, m2,mA,mB,mC);
+				stop = clock();
+				TIME << "2-kij ";
+				break;
+			}
+			case 3:
+			{
+				start = clock();
+				multmatr(j, m2, i, n1, k, m1,mA,mB,mC);
+				stop = clock();
+				TIME << "3-jik ";
+				break;
+			}
+			case 4:
+			{
+				start = clock();
+				multmatr(j, m2, k, m1, i, n1,mA,mB,mC);
+				stop = clock();
+				TIME << "4-jki ";
+				break;
+			}
+			case 5:
+			{
+				start = clock();
+				multmatr(k, m1, j, m2, i, n1,mA,mB,mC);
+				stop = clock();
+				TIME << "5-kji ";
+				break;
+			}
 		}
-		case 1:
+
+
+		TIME << (double)(stop-start)/CLOCKS_PER_SEC << "\n";
+
+		TIME.close();
+
+
+
+		ofstream rez(argv[3],ios::binary);
+		char c = 'f';
+		rez.write((char*)&c, sizeof(char) );
+		
+		rez.write((char*)&n1, sizeof(int) );
+		rez.write((char*)&m2, sizeof(int) );
+
+		for (i = 0; i < n1; i++)
 		{
-			start = clock();
-			multmatr(i, n1, k, m1, j, m2,mA,mB,mC);
-			stop = clock();
-			TIME << "1-ikj ";
-			break;
+			for (j = 0; j < m2; j++)
+				rez.write((char*)&mC[i][j], sizeof(float) );
 		}
-		case 2:
-		{
-			start = clock();
-			multmatr(k, m1, i, n1, j, m2,mA,mB,mC);
-			stop = clock();
-			TIME << "2-kij ";
-			break;
-		}
-		case 3:
-		{
-			start = clock();
-			multmatr(j, m2, i, n1, k, m1,mA,mB,mC);
-			stop = clock();
-			TIME << "3-jik ";
-			break;
-		}
-		case 4:
-		{
-			start = clock();
-			multmatr(j, m2, k, m1, i, n1,mA,mB,mC);
-			stop = clock();
-			TIME << "4-jki ";
-			break;
-		}
-		case 5:
-		{
-			start = clock();
-			multmatr(k, m1, j, m2, i, n1,mA,mB,mC);
-			stop = clock();
-			TIME << "5-kji ";
-			break;
-		}
-	}
 
+		rez.close();
 
-	TIME << (double)(stop-start)/CLOCKS_PER_SEC << "\n";
-
-	TIME.close();
+	} else
 
 
 
-	ofstream rez(argv[3]);
-	if (type1 =='d' || type2 == 'd')
-		rez << 'd' << " ";
-	else
-		rez << 'f' << " ";
-	rez << n1 << " " <<  m2 << "\n";
-
-	for (i = 0; i < n1; i++)
-	{
-		for (j = 0; j < m2; j++)
-			rez << mC[i][j] << " ";
-		rez << "\n";
-	}
-
-	rez.close();
+		
 	A.close();
 	B.close();
 
