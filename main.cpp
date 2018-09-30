@@ -89,7 +89,7 @@ int main (int argc, char** argv) // /.main A.dat B.dat C.dat <mode>
 				start = clock();
 				multmatr(i, n1, j, m2, k, m1,mA,mB,mC);
 				stop = clock();
-				TIME << "0-ijk ";
+				TIME << "0 ";
 				break;
 			}
 			case 1:
@@ -97,7 +97,7 @@ int main (int argc, char** argv) // /.main A.dat B.dat C.dat <mode>
 				start = clock();
 				multmatr(i, n1, k, m1, j, m2,mA,mB,mC);
 				stop = clock();
-				TIME << "1-ikj ";
+				TIME << "1 ";
 				break;
 			}
 			case 2:
@@ -105,7 +105,7 @@ int main (int argc, char** argv) // /.main A.dat B.dat C.dat <mode>
 				start = clock();
 				multmatr(k, m1, i, n1, j, m2,mA,mB,mC);
 				stop = clock();
-				TIME << "2-kij ";
+				TIME << "2 ";
 				break;
 			}
 			case 3:
@@ -113,7 +113,7 @@ int main (int argc, char** argv) // /.main A.dat B.dat C.dat <mode>
 				start = clock();
 				multmatr(j, m2, i, n1, k, m1,mA,mB,mC);
 				stop = clock();
-				TIME << "3-jik ";
+				TIME << "3 ";
 				break;
 			}
 			case 4:
@@ -121,7 +121,7 @@ int main (int argc, char** argv) // /.main A.dat B.dat C.dat <mode>
 				start = clock();
 				multmatr(j, m2, k, m1, i, n1,mA,mB,mC);
 				stop = clock();
-				TIME << "4-jki ";
+				TIME << "4 ";
 				break;
 			}
 			case 5:
@@ -129,7 +129,7 @@ int main (int argc, char** argv) // /.main A.dat B.dat C.dat <mode>
 				start = clock();
 				multmatr(k, m1, j, m2, i, n1,mA,mB,mC);
 				stop = clock();
-				TIME << "5-kji ";
+				TIME << "5 ";
 				break;
 			}
 		}
@@ -155,6 +155,17 @@ int main (int argc, char** argv) // /.main A.dat B.dat C.dat <mode>
 		}
 
 		rez.close();
+		for (int i = 0; i < n1; i++)
+			delete[] mA[i];
+		delete[] mA;
+
+		for (int i = 0; i < n1; i++)
+			delete[] mB[i];
+		delete[] mB;
+
+		for (int i = 0; i < n1; i++)
+			delete[] mC[i];
+		delete[] mC;
 
 	} else
 		if (type1 == type2 && type1 == 'f')
@@ -194,7 +205,7 @@ int main (int argc, char** argv) // /.main A.dat B.dat C.dat <mode>
 				start = clock();
 				multmatr(i, n1, j, m2, k, m1,mA,mB,mC);
 				stop = clock();
-				TIME << "0-ijk ";
+				TIME << "0 ";
 				break;
 			}
 			case 1:
@@ -202,7 +213,7 @@ int main (int argc, char** argv) // /.main A.dat B.dat C.dat <mode>
 				start = clock();
 				multmatr(i, n1, k, m1, j, m2,mA,mB,mC);
 				stop = clock();
-				TIME << "1-ikj ";
+				TIME << "1 ";
 				break;
 			}
 			case 2:
@@ -210,7 +221,7 @@ int main (int argc, char** argv) // /.main A.dat B.dat C.dat <mode>
 				start = clock();
 				multmatr(k, m1, i, n1, j, m2,mA,mB,mC);
 				stop = clock();
-				TIME << "2-kij ";
+				TIME << "2 ";
 				break;
 			}
 			case 3:
@@ -226,7 +237,7 @@ int main (int argc, char** argv) // /.main A.dat B.dat C.dat <mode>
 				start = clock();
 				multmatr(j, m2, k, m1, i, n1,mA,mB,mC);
 				stop = clock();
-				TIME << "4-jki ";
+				TIME << "4 ";
 				break;
 			}
 			case 5:
@@ -234,7 +245,7 @@ int main (int argc, char** argv) // /.main A.dat B.dat C.dat <mode>
 				start = clock();
 				multmatr(k, m1, j, m2, i, n1,mA,mB,mC);
 				stop = clock();
-				TIME << "5-kji ";
+				TIME << "5 ";
 				break;
 			}
 		}
@@ -260,12 +271,22 @@ int main (int argc, char** argv) // /.main A.dat B.dat C.dat <mode>
 		}
 
 		rez.close();
+		for (int i = 0; i < n1; i++)
+			delete[] mA[i];
+		delete[] mA;
 
-	} else
+		for (int i = 0; i < n1; i++)
+			delete[] mB[i];
+		delete[] mB;
 
+		for (int i = 0; i < n1; i++)
+			delete[] mC[i];
+		delete[] mC;
+	
 
+	} 
 
-		
+	
 	A.close();
 	B.close();
 
