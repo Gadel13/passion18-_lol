@@ -132,8 +132,11 @@ int main(int argc, char** argv) // ./main a b rez.txt <num threads>
 
 	time[0] += (double)(stop.tv_sec-start.tv_sec + 1e-9 * (stop.tv_nsec - start.tv_nsec));
 
-	pthread_t* threads = (pthread_t*) malloc(numprocs * sizeof(pthread_t));
-	pthrData* threadData = (pthrData*) malloc(numprocs * sizeof(pthrData));
+	pthread_t* threads;
+	pthrData* threadData;
+
+	threadData = new pthrData[numprocs * sizeof(pthrData)];
+	threads = new pthread_t[numprocs * sizeof(pthread_t)];
 
 	int block = (b-a+1)/numprocs;
 	int osta = (b-a+1)%numprocs;
@@ -180,8 +183,11 @@ int main(int argc, char** argv) // ./main a b rez.txt <num threads>
 	TT.close();
 	MT.close();
 
-	free(threads);
-	free(threadData);
+	//free(threads);
+	//free(threadData);
+
+	delete[] threads;
+	delete[] threadData;
 
 	delete[] array;
 

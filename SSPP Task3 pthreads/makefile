@@ -3,7 +3,7 @@ all: main
 
 
 main: main.cpp 
-	g++ -std=c++11 -O3 -o main  main.cpp /usr/lib/x86_64-linux-gnu/libpthread.so
+	g++ -std=c++11 -O3 -o main  main.cpp -lpthread
 
 
 clean:
