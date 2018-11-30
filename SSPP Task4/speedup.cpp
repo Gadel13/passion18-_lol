@@ -28,7 +28,7 @@ int main(int argc, char**  argv)
 
 	while(!IN.eof())
 	{
-		OUT << n << ' ' << ti1/(double)ti << endl;
+		OUT << n << ' ' << ti1/(double)ti << " " << ti1/((double)ti * n) << endl;
 		IN >> n;
 		IN >> ti;
 
