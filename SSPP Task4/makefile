@@ -3,16 +3,16 @@ all: main gen print speedup random
 
 
 main: main.cpp 
-	mpic++  -o main ./main.cpp
+	mpic++ -std=c++11 -O3 -o main ./main.cpp
 
 gen: gen.cpp 
-	g++  -o gen gen.cpp
+	g++ -std=c++11 -O3 -o gen gen.cpp
 
 print: print.cpp
-	g++  -o print print.cpp
+	g++ -std=c++11 -O3 -o print print.cpp
 
 speedup: speedup.cpp
-	g++ -o speedup speedup.cpp
+	g++ -std=c++11 -O3 -o speedup speedup.cpp
 
 random: random.cpp
 	g++ -o random random.cpp

@@ -95,6 +95,7 @@ int main(int argc, char** argv) // A*b = c    ./main <namefile A> <namefile b> <
 			C[i] = 0;
 	}
 
+
 	if(mode == 0)
 	{
 		int block = n1/numprocs;
@@ -223,11 +224,14 @@ int main(int argc, char** argv) // A*b = c    ./main <namefile A> <namefile b> <
 
 				for (int j = 0; j < block; j++)
 					A.read((char*)&bufA[i][j],sizeof(double));
+				
+				A.seekg((m1 - block * myid - block) * sizeof(double),ios_base::cur);
 			}
+
 
 			double* bufB = new double[block];
 
-			A.seekg(block * myid * sizeof(double),ios_base::cur);
+			B.seekg(block * myid * sizeof(double),ios_base::cur);
 			for (int i = 0; i < block; i++)
 				B.read((char*)&bufB[i],sizeof(double));
 
@@ -270,9 +274,10 @@ int main(int argc, char** argv) // A*b = c    ./main <namefile A> <namefile b> <
 					A.read((char*)&bufA[i][j],sizeof(double));
 			}
 
+
 			double* bufB = new double[block + osta];
 
-			A.seekg(block * myid * sizeof(double),ios_base::cur);
+			B.seekg(block * myid * sizeof(double),ios_base::cur);
 			for (int i = 0; i < block + osta; i++)
 				B.read((char*)&bufB[i],sizeof(double));
 
