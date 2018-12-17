@@ -3,41 +3,28 @@ all: main gen print speedup random
 
 
 main: main.cpp 
-	mpic++ -std=c++11 -O3 -o main ./main.cpp
+	mpicxx  -O3 -o main ./main.cpp
 
 gen: gen.cpp 
-	g++ -std=c++11 -O3 -o gen gen.cpp
+	g++ -O3 -o gen gen.cpp
 
 print: print.cpp
-	g++ -std=c++11 -O3 -o print print.cpp
+	g++  -O3 -o print print.cpp
 
 speedup: speedup.cpp
-	g++ -std=c++11 -O3 -o speedup speedup.cpp
+	g++ -O3 -o speedup speedup.cpp
 
 random: random.cpp
 	g++ -o random random.cpp
 
 
+
 clean:
-	rm -f *.o main gen print speedup random
-	rm -f *.dat
+	rm -f *.o main gen print speedup random eql
+	rm -f A.dat B.dat C.dat testC.dat
 	rm -f *.o commands
 	rm -f *.o *.png *.txt
 
-
-test0:
-	make clean
-	make
-	./gen d 500 300 A.dat
-	./gen d 300 1 B.dat
-	mpirun -n 8 ./main A.dat B.dat C.dat
-
-test1:
-	make clean
-	make
-	./gen d 2 3 A.dat
-	./gen d 3 1 B.dat
-	mpirun -n 8 ./main A.dat B.dat C.dat
 
 report:
 	make clean
