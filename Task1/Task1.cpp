@@ -57,11 +57,11 @@ int main(int argc, char const *argv[]) // n, k
 			}
 	}
 
-	cout << norma << " NORMA!!" << endl;
+	//cout << norma << " NORMA!!" << endl;
 	double del = sqrt(norma);
-	cout << del << "DEL!!!" << endl;
+	//cout << del << "DEL!!!" << endl;
 
-	#pragma for 
+	#pragma omp for 
 	{
 		for(i = 0; i < size; i++)
 			a[i] /= del;
