@@ -61,7 +61,7 @@ int main(int argc, char const *argv[]) // n, k
 	double del = sqrt(norma);
 	//cout << del << "DEL!!!" << endl;
 
-	#pragma omp for 
+	#pragma omp parallel for 
 	{
 		for(i = 0; i < size; i++)
 			a[i] /= del;
