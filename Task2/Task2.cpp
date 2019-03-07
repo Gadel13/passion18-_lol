@@ -6,6 +6,7 @@
 #include <math.h>
 #include <cstdio>
 #include <cstdlib>
+#include <fstream>
 	
 using namespace std;
 
@@ -108,6 +109,7 @@ int main(int argc, char** argv) // n, k, <file - 0, rand - 1>, <if file filename
 	double norma = 0;
 
 	double time = 0.0;
+	double time_rand = 0.0;
 	double max_time = 0.0;
 
 	int rc;
@@ -126,12 +128,11 @@ int main(int argc, char** argv) // n, k, <file - 0, rand - 1>, <if file filename
 
   	if (enter)
   	{
-  		double time_rand;
   		if(myid == 0)
-  		{
   			time_rand = MPI_Wtime();
-  			MPI_Bcast(&time_rand, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-  		}
+
+  		MPI_Bcast(&time_rand, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+  		//MPI_Barrier(MPI_COMM_WORLD);
   		seed = (long)time_rand + myid;
   		for(int i = 0; i < local_size; i++)
 		{
@@ -143,6 +144,13 @@ int main(int argc, char** argv) // n, k, <file - 0, rand - 1>, <if file filename
 
   	}else
   	{
+  		if (myid == 0)
+  		{
+  			ifstream file;
+  			file.open("REZ.dat",ios::trunc | ios::binary | ios::out);
+  			file.close();
+  		}
+  		MPI_Barrier(MPI_COMM_WORLD);
   		fileread(a,argv[4],n,k,myid,local_size,norma);
   	}
 

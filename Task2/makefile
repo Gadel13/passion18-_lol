@@ -8,5 +8,5 @@ Task2: Task2.cpp
 
 
 clean:
-	rm -f *.o Task2
+	rm -f Task2 REZ.dat
 
