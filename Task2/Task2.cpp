@@ -126,7 +126,13 @@ int main(int argc, char** argv) // n, k, <file - 0, rand - 1>, <if file filename
 
   	if (enter)
   	{
-  		seed = (long)MPI_Wtime() + myid;
+  		double time_rand;
+  		if(myid == 0)
+  		{
+  			time_rand = MPI_Wtime();
+  			MPI_Bcast(&time_rand, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+  		}
+  		seed = (long)time_rand + myid;
   		for(int i = 0; i < local_size; i++)
 		{
   			//a[i] = (double)(i + myid*local_size);
