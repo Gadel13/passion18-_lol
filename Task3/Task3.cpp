@@ -10,10 +10,10 @@
 #include <cstdlib>
 #include <string.h>
 	
-#define eps 0.01
 
 using namespace std;
 
+static const int EX_NUM = 60;
 double normal_dis_gen()
 {
 	double S = 0;
@@ -54,7 +54,7 @@ void fileread(vector< complex<double> > &a, char* filename, unsigned n,int myid,
 	MPI_File_close(&IN);
 }
 
-void transform(vector< complex<double> > &a, vector< complex<double> > &b, vector< vector< complex<double> > > &U, unsigned n, int myid, int numprocs, unsigned noise)
+void transform(vector< complex<double> > &a, vector< complex<double> > &b, vector< vector< complex<double> > > &U, unsigned n, int myid, int numprocs, unsigned noise, double eps)
 {
 	MPI_Status status;
 	unsigned int size = pow(2,n), ik;
@@ -74,7 +74,8 @@ void transform(vector< complex<double> > &a, vector< complex<double> > &b, vecto
 			if(myid == 0)
 			teta = eps*normal_dis_gen();
 			MPI_Bcast(&teta, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-		}else
+		}
+		else
 			teta = 0;
 
 
@@ -146,8 +147,10 @@ void transform(vector< complex<double> > &a, vector< complex<double> > &b, vecto
 
 }
 
-int main(int argc, char** argv) // n, <file - 0, rand - 1>, <0 - ideal and (1-F), 1 - noise only>, <if file filename.txt read, if rand filename out gener vec, 0 - no file>,
+
+int main(int argc, char** argv) // n, <file - 0, rand - 1>, <0 - ideal and (1-F), 1 - noise only>, <if file filename.txt read, if rand filename out gener vec, 0 - no file>, <eps>
 {
+	double eps = atof(argv[5]);
 	
 	int numprocs, myid, numthread;
 	unsigned n, enter, noise;
@@ -185,8 +188,7 @@ int main(int argc, char** argv) // n, <file - 0, rand - 1>, <0 - ideal and (1-F)
 
   	local_size = size/numprocs;
 
-	vector< complex<double> > a(local_size), b(local_size);
-
+	vector< complex<double> > a(local_size), b(local_size), c(local_size);
 
   	if (enter)
   	{
@@ -211,7 +213,7 @@ int main(int argc, char** argv) // n, <file - 0, rand - 1>, <0 - ideal and (1-F)
 				}
 		}
 
-		if( strcmp(argv[4], "0") != 0 && argc == 5) 
+		if( strcmp(argv[4], "0") != 0) 
 		{
 			if (myid == 0)
   			{
@@ -272,52 +274,89 @@ int main(int argc, char** argv) // n, <file - 0, rand - 1>, <0 - ideal and (1-F)
 	  		}
 	}
 
+	#pragma omp parallel 
+	{
+		#pragma omp for private(i)
+	  		for(int i = 0; i < local_size; i++)
+	  		{
+				c[i] = a[i];
+	  		}
+	}
+
   	time = -MPI_Wtime();
 
-	transform(a,b,U,n,myid,numprocs,noise);
+	transform(a,b,U,n,myid,numprocs,1,eps);
 
 
 	time += MPI_Wtime();
 
-	if (myid == 0)
+	if(noise == 0)
 	{
-		ifstream file;
-		file.open("REZ.dat",ios::trunc | ios::binary | ios::out);
-		file.close();
+		transform(c,b,U,n,myid,numprocs,0,eps);  // a- with noize // c - ideal
 	}
 
-	MPI_Status status;
+	// if (myid == 0)
+	// {
+	// 	ifstream file;
+	// 	file.open("REZ.dat",ios::trunc | ios::binary | ios::out);
+	// 	file.close();
+	// }
+
+	// MPI_Status status;
 	
-	MPI_File OUT;
-	if(noise)
-		MPI_File_open(MPI_COMM_WORLD, "REZ.dat", MPI_MODE_WRONLY|MPI_MODE_CREATE,MPI_INFO_NULL, &OUT);
-	else
-		MPI_File_open(MPI_COMM_WORLD, "REZideal.dat", MPI_MODE_WRONLY|MPI_MODE_CREATE,MPI_INFO_NULL, &OUT);
-	MPI_File_seek(OUT,myid*local_size*2*sizeof(double), MPI_SEEK_SET);
-	double *tmp_buf;
-	tmp_buf = new double[2*local_size];
+	// MPI_File OUT;
+	// MPI_File_open(MPI_COMM_WORLD, "REZ.dat", MPI_MODE_WRONLY|MPI_MODE_CREATE,MPI_INFO_NULL, &OUT);
+	// MPI_File_seek(OUT,myid*local_size*2*sizeof(double), MPI_SEEK_SET);
+	// double *tmp_buf;
+	// tmp_buf = new double[2*local_size];
 
-	#pragma omp parallel
-	{
-		#pragma omp for private(i) 
-			for(i = 0; i < local_size; i++)
-			{
-				tmp_buf[2*i] = b[i].real();
-				tmp_buf[2*i + 1] = b[i].imag();
-			}
-	}
+	// #pragma omp parallel
+	// {
+	// 	#pragma omp for private(i) 
+	// 		for(i = 0; i < local_size; i++)
+	// 		{
+	// 			tmp_buf[2*i] = a[i].real();
+	// 			tmp_buf[2*i + 1] = a[i].imag();
+	// 		}
+	// }
 
-	MPI_File_write(OUT,tmp_buf,local_size*2, MPI_DOUBLE,&status);
+	// MPI_File_write(OUT,tmp_buf,local_size*2, MPI_DOUBLE,&status);
 
-	// for(int i = 0; i < local_size; i++)
-	// 	cout << " --> " << b[i] << endl;
+	// // for(int i = 0; i < local_size; i++)
+	// // 	cout << " --> " << a[i] << endl;
 
-	delete[] tmp_buf;
+	// delete[] tmp_buf;
 
-	MPI_File_close(&OUT);
+	// MPI_File_close(&OUT);
 
 
 	MPI_Reduce(&time,&max_time,1,MPI_DOUBLE,MPI_MAX,0,MPI_COMM_WORLD);
+
+	if(noise == 0)
+	{
+		complex<double> local_sum = 0;
+		complex<double> sum = 0;
+		for(i = 0; i < local_size; i++)
+		{
+			local_sum += a[i]*conj(c[i]);
+
+		}
+
+		MPI_Reduce(&local_sum, &sum, 1, MPI_CXX_DOUBLE_COMPLEX, MPI_SUM, 0, MPI_COMM_WORLD);
+
+
+		if(myid == 0)
+		{
+			sum = abs(sum);
+			sum = sum*sum;
+
+			ofstream OUT;
+			OUT.open("Fidelity.txt", ios::out | ios::app);
+			OUT << n << "  " << 1-sum.real() << endl;
+			OUT.close();
+		}
+
+	}
 
 
 	if(myid == 0)
@@ -328,7 +367,7 @@ int main(int argc, char** argv) // n, <file - 0, rand - 1>, <0 - ideal and (1-F)
   		if (enter != 0)
   		{
   			file << "random" << endl;
-  			if(argc == 5 && strcmp(argv[4], "0") != 0)
+  			if(strcmp(argv[4], "0") != 0)
   				file << "Rand_rez : " << argv[4] << endl;
   		}else
   		{
