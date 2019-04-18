@@ -1,15 +1,15 @@
 sudo: required
 
-language: cpp
+ language: generic
 
-services:
+ services:
 - docker
 
-arch:
+ arch:
   packages:
   - openmpi
   script:
   - ./test_all.sh
 
-script:
+ script:
   - "curl -s https://raw.githubusercontent.com/mikkeloscar/arch-travis/master/arch-travis.sh | bash"
