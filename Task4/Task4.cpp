@@ -14,10 +14,9 @@
 
 using namespace std;
 
-void fileread(vector< complex<double> > &a, char* filename, unsigned n, int myid, unsigned int local_size, double &norma) {
+void fileread(vector< complex<double> > &a, char* filename, unsigned n, int myid, unsigned local_size, double &norma) {
      MPI_File IN;
      MPI_Status status;
-     unsigned int size = pow(2, n);
 
      double *tmp_buf;
      tmp_buf = new double[local_size*2];
@@ -25,7 +24,7 @@ void fileread(vector< complex<double> > &a, char* filename, unsigned n, int myid
      MPI_File_open(MPI_COMM_WORLD, filename, MPI_MODE_RDONLY, MPI_INFO_NULL, &IN);
      MPI_File_seek(IN, myid*local_size*2*sizeof(double), MPI_SEEK_SET);
      MPI_File_read(IN, tmp_buf, local_size*2, MPI_DOUBLE, &status);
-     int i;
+     unsigned i;
      #pragma omp parallel
      {
           #pragma omp for private(i) reduction(+: norma)
@@ -42,13 +41,12 @@ void fileread(vector< complex<double> > &a, char* filename, unsigned n, int myid
 
 // n, <1 - rand, 0 - file>, <"if read_file "infile.dat" else "rand_data_file.dat" >, <outfile.dat>
 int main(int argc, char** argv) {
-    int numprocs, myid, numthread;
+    int numprocs, myid;
     unsigned n, enter;
     n = atoi(argv[1]);
     enter = atoi(argv[2]);
 
-    unsigned int size = pow(2, n);
-    unsigned int local_size;
+    unsigned size = pow(2, n);
 
     unsigned seed;
     double norma = 0;
@@ -57,7 +55,8 @@ int main(int argc, char** argv) {
 
 
     int rc;
-    if (rc= MPI_Init(&argc, &argv)) {
+    rc = MPI_Init(&argc, &argv);
+    if (rc) {
        cout << "ERROR! MPI_Init " << endl;
        MPI_Abort(MPI_COMM_WORLD, rc);
       }
@@ -65,7 +64,8 @@ int main(int argc, char** argv) {
     MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
     MPI_Comm_rank(MPI_COMM_WORLD, &myid);
 
-    local_size = size/numprocs;
+    unsigned local_size;
+    local_size = (unsigned)size/(unsigned)numprocs;
 
     vector< complex<double> > a(local_size), b(local_size);
 
@@ -76,7 +76,7 @@ int main(int argc, char** argv) {
 
         MPI_Bcast(&time_rand, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
-        int i;
+        unsigned i;
         #pragma omp parallel private(seed, i)
         {
             seed = (long)time_rand + myid*omp_get_num_threads() + omp_get_thread_num();
@@ -134,13 +134,12 @@ int main(int argc, char** argv) {
     del = sqrt(del);
 
 
-    int i;
+    unsigned i;
     #pragma omp parallel
     {
         #pragma omp for private(i)
-            for (int i = 0; i < local_size; i++) {
-                numthread = omp_get_num_threads();
-            a[i] /= del;
+            for (unsigned i = 0; i < local_size; i++) {
+                a[i] /= del;
             }
     }
 

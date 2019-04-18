@@ -10,8 +10,8 @@ void NOT(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n,
 	MPI_Comm_size(MPI_COMM_WORLD,&numprocs);
   	MPI_Comm_rank(MPI_COMM_WORLD,&myid);
 
-	unsigned int size = pow(2,n), ik;
-	unsigned int local_size = size/numprocs;
+	unsigned size = pow(2,n), ik;
+	unsigned local_size = size/numprocs;
 	double *tmp_buf;
 
 
@@ -36,7 +36,7 @@ void NOT(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n,
 	else
 	{
 		tmp_buf = new double[2*local_size];
-		int i;
+		unsigned i;
 
 		#pragma omp parallel 
 		{
@@ -51,7 +51,7 @@ void NOT(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n,
 		MPI_Sendrecv_replace(tmp_buf,2*local_size,MPI_DOUBLE,recv_addr,123,recv_addr,123,MPI_COMM_WORLD,&status);
 	}
 
-	int i;
+	unsigned i;
 	#pragma omp parallel
 	{
 		#pragma omp for private(i, a_tmp)
@@ -85,8 +85,8 @@ void H(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, u
 	MPI_Comm_size(MPI_COMM_WORLD,&numprocs);
   	MPI_Comm_rank(MPI_COMM_WORLD,&myid);
 
-	unsigned int size = pow(2,n), ik;
-	unsigned int local_size = size/numprocs;
+	unsigned size = pow(2,n), ik;
+	unsigned local_size = size/numprocs;
 	double *tmp_buf;
 
 
@@ -111,7 +111,7 @@ void H(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, u
 	else
 	{
 		tmp_buf = new double[2*local_size];
-		int i;
+		unsigned i;
 
 		#pragma omp parallel 
 		{
@@ -126,7 +126,7 @@ void H(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, u
 		MPI_Sendrecv_replace(tmp_buf,2*local_size,MPI_DOUBLE,recv_addr,123,recv_addr,123,MPI_COMM_WORLD,&status);
 	}
 
-	int i;
+	unsigned i;
 	#pragma omp parallel
 	{
 		#pragma omp for private(i, a_tmp)
@@ -160,8 +160,8 @@ void nH(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n)
 	MPI_Comm_size(MPI_COMM_WORLD,&numprocs);
   	MPI_Comm_rank(MPI_COMM_WORLD,&myid);
 
-	unsigned int size = pow(2,n), ik;
-	unsigned int local_size = size/numprocs;
+	unsigned size = pow(2,n), ik;
+	unsigned local_size = size/numprocs;
 	double *tmp_buf;
 
 
@@ -174,7 +174,7 @@ void nH(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n)
 	H[1][0] = H[0][0];
 	H[1][1] = -H[0][0];
 
-	for(int k = 1; k <= n; k++)
+	for(unsigned k = 1; k <= n; k++)
 	{
 		ik = pow(2,n-k);
 
@@ -188,7 +188,7 @@ void nH(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n)
 		else
 		{
 			tmp_buf = new double[2*local_size];
-			int i;
+			unsigned i;
 
 			#pragma omp parallel 
 			{
@@ -203,7 +203,7 @@ void nH(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n)
 			MPI_Sendrecv_replace(tmp_buf,2*local_size,MPI_DOUBLE,recv_addr,123,recv_addr,123,MPI_COMM_WORLD,&status);
 		}
 
-		int i;
+		unsigned i;
 		#pragma omp parallel
 		{
 			#pragma omp for private(i, a_tmp)
@@ -232,7 +232,7 @@ void nH(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n)
 		#pragma omp parallel 
 		{
 			#pragma omp for private(i)
-				for(int i = 0; i < local_size; i++)
+				for(unsigned i = 0; i < local_size; i++)
 					a[i] = b[i];
 		}
 	}
@@ -246,8 +246,8 @@ void CNOT(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n
 	MPI_Comm_size(MPI_COMM_WORLD,&numprocs);
   	MPI_Comm_rank(MPI_COMM_WORLD,&myid);
 
-	unsigned int size = pow(2,n), ik, icontrol;
-	unsigned int local_size = size/numprocs;
+	unsigned size = pow(2,n), ik, icontrol;
+	unsigned local_size = size/numprocs;
 	double *tmp_buf;
 
 
@@ -274,7 +274,7 @@ void CNOT(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n
 	else
 	{
 		tmp_buf = new double[2*local_size];
-		int i;
+		unsigned i;
 
 		#pragma omp parallel 
 		{
@@ -289,7 +289,7 @@ void CNOT(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n
 		MPI_Sendrecv_replace(tmp_buf,2*local_size,MPI_DOUBLE,recv_addr,123,recv_addr,123,MPI_COMM_WORLD,&status);
 	}
 
-	int i;
+	unsigned i;
 	#pragma omp parallel
 	{
 		#pragma omp for private(i, a_tmp)
@@ -327,8 +327,8 @@ void Rw(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, 
 	MPI_Comm_size(MPI_COMM_WORLD,&numprocs);
   	MPI_Comm_rank(MPI_COMM_WORLD,&myid);
 
-	unsigned int size = pow(2,n), ik;
-	unsigned int local_size = size/numprocs;
+	unsigned size = pow(2,n), ik;
+	unsigned local_size = size/numprocs;
 	double *tmp_buf;
 
 
@@ -354,7 +354,7 @@ void Rw(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, 
 	else
 	{
 		tmp_buf = new double[2*local_size];
-		int i;
+		unsigned i;
 
 		#pragma omp parallel 
 		{
@@ -369,7 +369,7 @@ void Rw(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, 
 		MPI_Sendrecv_replace(tmp_buf,2*local_size,MPI_DOUBLE,recv_addr,123,recv_addr,123,MPI_COMM_WORLD,&status);
 	}
 
-	int i;
+	unsigned i;
 	#pragma omp parallel
 	{
 		#pragma omp for private(i, a_tmp)
@@ -403,8 +403,8 @@ void CRw(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n,
 	MPI_Comm_size(MPI_COMM_WORLD,&numprocs);
   	MPI_Comm_rank(MPI_COMM_WORLD,&myid);
 
-	unsigned int size = pow(2,n), ik, icontrol;
-	unsigned int local_size = size/numprocs;
+	unsigned size = pow(2,n), ik, icontrol;
+	unsigned local_size = size/numprocs;
 	double *tmp_buf;
 
 
@@ -431,7 +431,7 @@ void CRw(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n,
 	else
 	{
 		tmp_buf = new double[2*local_size];
-		int i;
+		unsigned i;
 
 		#pragma omp parallel 
 		{
@@ -446,7 +446,7 @@ void CRw(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n,
 		MPI_Sendrecv_replace(tmp_buf,2*local_size,MPI_DOUBLE,recv_addr,123,recv_addr,123,MPI_COMM_WORLD,&status);
 	}
 
-	int i;
+	unsigned i;
 	#pragma omp parallel
 	{
 		#pragma omp for private(i, a_tmp)
