@@ -13,6 +13,7 @@ void NOT(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n,
 	unsigned size = pow(2,n), ik;
 	unsigned local_size = size/numprocs;
 	double *tmp_buf;
+	double *tmp_buf1;
 
 
 	vector< vector<complex<double> > > H(2);
@@ -36,6 +37,7 @@ void NOT(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n,
 	else
 	{
 		tmp_buf = new double[2*local_size];
+		tmp_buf1 = new double[2*local_size];
 		unsigned i;
 
 		#pragma omp parallel 
@@ -43,12 +45,13 @@ void NOT(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n,
 			#pragma omp for private(i)
 				for(i = 0; i < local_size; i++)
 				{
-					tmp_buf[2*i] = a[i].real();
-					tmp_buf[2*i + 1] = a[i].imag();
+					tmp_buf1[2*i] = a[i].real();
+					tmp_buf1[2*i + 1] = a[i].imag();
 				}
 		}
 
-		MPI_Sendrecv_replace(tmp_buf,2*local_size,MPI_DOUBLE,recv_addr,123,recv_addr,123,MPI_COMM_WORLD,&status);
+		MPI_Sendrecv(tmp_buf1, 2*local_size, MPI_DOUBLE, recv_addr, 123, tmp_buf, 2*local_size, MPI_DOUBLE, myid, 123, MPI_COMM_WORLD, &status);
+		delete[] tmp_buf1;
 	}
 
 	unsigned i;
@@ -88,6 +91,7 @@ void H(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, u
 	unsigned size = pow(2,n), ik;
 	unsigned local_size = size/numprocs;
 	double *tmp_buf;
+	double *tmp_buf1;
 
 
 	vector< vector<complex<double> > > H(2);
@@ -111,6 +115,7 @@ void H(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, u
 	else
 	{
 		tmp_buf = new double[2*local_size];
+		tmp_buf1 = new double[2*local_size];
 		unsigned i;
 
 		#pragma omp parallel 
@@ -118,12 +123,13 @@ void H(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, u
 			#pragma omp for private(i)
 				for(i = 0; i < local_size; i++)
 				{
-					tmp_buf[2*i] = a[i].real();
-					tmp_buf[2*i + 1] = a[i].imag();
+					tmp_buf1[2*i] = a[i].real();
+					tmp_buf1[2*i + 1] = a[i].imag();
 				}
 		}
 
-		MPI_Sendrecv_replace(tmp_buf,2*local_size,MPI_DOUBLE,recv_addr,123,recv_addr,123,MPI_COMM_WORLD,&status);
+		MPI_Sendrecv(tmp_buf1, 2*local_size, MPI_DOUBLE, recv_addr, 123, tmp_buf, 2*local_size, MPI_DOUBLE, myid, 123, MPI_COMM_WORLD, &status);
+		delete[] tmp_buf1;
 	}
 
 	unsigned i;
@@ -163,6 +169,7 @@ void nH(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n)
 	unsigned size = pow(2,n), ik;
 	unsigned local_size = size/numprocs;
 	double *tmp_buf;
+	double *tmp_buf1;
 
 
 	vector< vector<complex<double> > > H(2);
@@ -188,6 +195,7 @@ void nH(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n)
 		else
 		{
 			tmp_buf = new double[2*local_size];
+			tmp_buf1 = new double[2*local_size];
 			unsigned i;
 
 			#pragma omp parallel 
@@ -195,12 +203,13 @@ void nH(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n)
 				#pragma omp for private(i)
 					for(i = 0; i < local_size; i++)
 					{
-						tmp_buf[2*i] = a[i].real();
-						tmp_buf[2*i + 1] = a[i].imag();
+						tmp_buf1[2*i] = a[i].real();
+						tmp_buf1[2*i + 1] = a[i].imag();
 					}
 			}
 
-			MPI_Sendrecv_replace(tmp_buf,2*local_size,MPI_DOUBLE,recv_addr,123,recv_addr,123,MPI_COMM_WORLD,&status);
+			MPI_Sendrecv(tmp_buf1, 2*local_size, MPI_DOUBLE, recv_addr, 123, tmp_buf, 2*local_size, MPI_DOUBLE, myid, 123, MPI_COMM_WORLD, &status);
+			delete[] tmp_buf1;
 		}
 
 		unsigned i;
@@ -249,6 +258,7 @@ void CNOT(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n
 	unsigned size = pow(2,n), ik, icontrol;
 	unsigned local_size = size/numprocs;
 	double *tmp_buf;
+	double *tmp_buf1;
 
 
 	vector< vector<complex<double> > > H(2);
@@ -274,6 +284,7 @@ void CNOT(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n
 	else
 	{
 		tmp_buf = new double[2*local_size];
+		tmp_buf1 = new double[2*local_size];
 		unsigned i;
 
 		#pragma omp parallel 
@@ -281,12 +292,14 @@ void CNOT(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n
 			#pragma omp for private(i)
 				for(i = 0; i < local_size; i++)
 				{
-					tmp_buf[2*i] = a[i].real();
-					tmp_buf[2*i + 1] = a[i].imag();
+					tmp_buf1[2*i] = a[i].real();
+					tmp_buf1[2*i + 1] = a[i].imag();
 				}
 		}
 
-		MPI_Sendrecv_replace(tmp_buf,2*local_size,MPI_DOUBLE,recv_addr,123,recv_addr,123,MPI_COMM_WORLD,&status);
+		MPI_Sendrecv(tmp_buf1, 2*local_size, MPI_DOUBLE, recv_addr, 123, tmp_buf, 2*local_size, MPI_DOUBLE, myid, 123, MPI_COMM_WORLD, &status);
+		delete[] tmp_buf1;
+
 	}
 
 	unsigned i;
@@ -330,6 +343,7 @@ void Rw(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, 
 	unsigned size = pow(2,n), ik;
 	unsigned local_size = size/numprocs;
 	double *tmp_buf;
+	double *tmp_buf1;
 
 
 	vector< vector<complex<double> > > H(2);
@@ -354,6 +368,7 @@ void Rw(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, 
 	else
 	{
 		tmp_buf = new double[2*local_size];
+		tmp_buf1 = new double[2*local_size];
 		unsigned i;
 
 		#pragma omp parallel 
@@ -361,12 +376,13 @@ void Rw(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, 
 			#pragma omp for private(i)
 				for(i = 0; i < local_size; i++)
 				{
-					tmp_buf[2*i] = a[i].real();
-					tmp_buf[2*i + 1] = a[i].imag();
+					tmp_buf1[2*i] = a[i].real();
+					tmp_buf1[2*i + 1] = a[i].imag();
 				}
 		}
 
-		MPI_Sendrecv_replace(tmp_buf,2*local_size,MPI_DOUBLE,recv_addr,123,recv_addr,123,MPI_COMM_WORLD,&status);
+		MPI_Sendrecv(tmp_buf1, 2*local_size, MPI_DOUBLE, recv_addr, 123, tmp_buf, 2*local_size, MPI_DOUBLE, myid, 123, MPI_COMM_WORLD, &status);
+		delete[] tmp_buf1;
 	}
 
 	unsigned i;
@@ -406,6 +422,7 @@ void CRw(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n,
 	unsigned size = pow(2,n), ik, icontrol;
 	unsigned local_size = size/numprocs;
 	double *tmp_buf;
+	double *tmp_buf1;
 
 
 	vector< vector<complex<double> > > H(2);
@@ -431,6 +448,7 @@ void CRw(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n,
 	else
 	{
 		tmp_buf = new double[2*local_size];
+		tmp_buf1 = new double[2*local_size];
 		unsigned i;
 
 		#pragma omp parallel 
@@ -438,12 +456,13 @@ void CRw(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n,
 			#pragma omp for private(i)
 				for(i = 0; i < local_size; i++)
 				{
-					tmp_buf[2*i] = a[i].real();
-					tmp_buf[2*i + 1] = a[i].imag();
+					tmp_buf1[2*i] = a[i].real();
+					tmp_buf1[2*i + 1] = a[i].imag();
 				}
 		}
 
-		MPI_Sendrecv_replace(tmp_buf,2*local_size,MPI_DOUBLE,recv_addr,123,recv_addr,123,MPI_COMM_WORLD,&status);
+		MPI_Sendrecv(tmp_buf1, 2*local_size, MPI_DOUBLE, recv_addr, 123, tmp_buf, 2*local_size, MPI_DOUBLE, myid, 123, MPI_COMM_WORLD, &status);
+		delete[] tmp_buf1;
 	}
 
 	unsigned i;
