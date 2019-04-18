@@ -23,7 +23,7 @@ void fileread(vector< complex<double> > &a, char* filename, unsigned n, int myid
 
      MPI_File_open(MPI_COMM_WORLD, filename, MPI_MODE_RDONLY, MPI_INFO_NULL, &IN);
      MPI_File_seek(IN, myid*local_size*2*sizeof(double), MPI_SEEK_SET);
-     MPI_File_read(IN, tmp_buf, local_size*2, MPI_DOUBLE, &status);
+     MPI_File_read_all(IN, tmp_buf, local_size*2, MPI_DOUBLE, &status);
      unsigned i;
      #pragma omp parallel
      {
@@ -116,7 +116,7 @@ int main(int argc, char** argv) {
             }
         }
 
-        MPI_File_write(OUT, tmp_buf, local_size*2, MPI_DOUBLE, &status);
+        MPI_File_write_all(OUT, tmp_buf, local_size*2, MPI_DOUBLE, &status);
 
         delete[] tmp_buf;
 
@@ -240,7 +240,7 @@ int main(int argc, char** argv) {
             }
     }
 
-    MPI_File_write(OUT, tmp_buf, local_size*2, MPI_DOUBLE, &status);
+    MPI_File_write_all(OUT, tmp_buf, local_size*2, MPI_DOUBLE, &status);
 
     delete[] tmp_buf;
 

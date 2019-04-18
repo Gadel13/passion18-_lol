@@ -1,6 +1,6 @@
 #include "gates.h"
 
-
+#include<iostream>
 using namespace std;
 
 void NOT(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, unsigned k)
@@ -50,7 +50,7 @@ void NOT(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n,
 				}
 		}
 
-		MPI_Sendrecv(tmp_buf1, 2*local_size, MPI_DOUBLE, recv_addr, 123, tmp_buf, 2*local_size, MPI_DOUBLE, myid, 123, MPI_COMM_WORLD, &status);
+		MPI_Sendrecv(tmp_buf1, 2*local_size, MPI_DOUBLE, recv_addr, 123, tmp_buf, 2*local_size, MPI_DOUBLE, recv_addr, 123, MPI_COMM_WORLD, &status);
 		delete[] tmp_buf1;
 	}
 
@@ -128,7 +128,7 @@ void H(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, u
 				}
 		}
 
-		MPI_Sendrecv(tmp_buf1, 2*local_size, MPI_DOUBLE, recv_addr, 123, tmp_buf, 2*local_size, MPI_DOUBLE, myid, 123, MPI_COMM_WORLD, &status);
+		MPI_Sendrecv(tmp_buf1, 2*local_size, MPI_DOUBLE, recv_addr, 123, tmp_buf, 2*local_size, MPI_DOUBLE, recv_addr, 123, MPI_COMM_WORLD, &status);
 		delete[] tmp_buf1;
 	}
 
@@ -183,6 +183,8 @@ void nH(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n)
 
 	for(unsigned k = 1; k <= n; k++)
 	{
+		MPI_Barrier(MPI_COMM_WORLD);
+
 		ik = pow(2,n-k);
 
 		int flag = 1; // 0 - cur proc, 1 - other proc
@@ -208,7 +210,7 @@ void nH(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n)
 					}
 			}
 
-			MPI_Sendrecv(tmp_buf1, 2*local_size, MPI_DOUBLE, recv_addr, 123, tmp_buf, 2*local_size, MPI_DOUBLE, myid, 123, MPI_COMM_WORLD, &status);
+			MPI_Sendrecv(tmp_buf1, 2*local_size, MPI_DOUBLE, recv_addr, 123, tmp_buf, 2*local_size, MPI_DOUBLE, recv_addr, 123, MPI_COMM_WORLD, &status);
 			delete[] tmp_buf1;
 		}
 
@@ -244,6 +246,7 @@ void nH(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n)
 				for(unsigned i = 0; i < local_size; i++)
 					a[i] = b[i];
 		}
+
 	}
 
 }
@@ -297,7 +300,7 @@ void CNOT(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n
 				}
 		}
 
-		MPI_Sendrecv(tmp_buf1, 2*local_size, MPI_DOUBLE, recv_addr, 123, tmp_buf, 2*local_size, MPI_DOUBLE, myid, 123, MPI_COMM_WORLD, &status);
+		MPI_Sendrecv(tmp_buf1, 2*local_size, MPI_DOUBLE, recv_addr, 123, tmp_buf, 2*local_size, MPI_DOUBLE, recv_addr, 123, MPI_COMM_WORLD, &status);
 		delete[] tmp_buf1;
 
 	}
@@ -381,7 +384,7 @@ void Rw(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, 
 				}
 		}
 
-		MPI_Sendrecv(tmp_buf1, 2*local_size, MPI_DOUBLE, recv_addr, 123, tmp_buf, 2*local_size, MPI_DOUBLE, myid, 123, MPI_COMM_WORLD, &status);
+		MPI_Sendrecv(tmp_buf1, 2*local_size, MPI_DOUBLE, recv_addr, 123, tmp_buf, 2*local_size, MPI_DOUBLE, recv_addr, 123, MPI_COMM_WORLD, &status);
 		delete[] tmp_buf1;
 	}
 
@@ -461,7 +464,7 @@ void CRw(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n,
 				}
 		}
 
-		MPI_Sendrecv(tmp_buf1, 2*local_size, MPI_DOUBLE, recv_addr, 123, tmp_buf, 2*local_size, MPI_DOUBLE, myid, 123, MPI_COMM_WORLD, &status);
+		MPI_Sendrecv(tmp_buf1, 2*local_size, MPI_DOUBLE, recv_addr, 123, tmp_buf, 2*local_size, MPI_DOUBLE, recv_addr, 123, MPI_COMM_WORLD, &status);
 		delete[] tmp_buf1;
 	}
 
