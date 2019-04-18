@@ -231,14 +231,14 @@ int main(int argc, char** argv) {
     double *tmp_buf;
     tmp_buf = new double[2*local_size];
 
-    #pragma omp parallel
-    {
-        #pragma omp for private(i)
+    //#pragma omp parallel
+    //{
+      //  #pragma omp for private(i)
             for (i = 0; i < local_size; i++) {
                 tmp_buf[2*i] = b[i].real();
                 tmp_buf[2*i + 1] = b[i].imag();
             }
-    }
+    //}
 
     MPI_File_write_all(OUT, tmp_buf, local_size*2, MPI_DOUBLE, &status);
 
@@ -246,14 +246,14 @@ int main(int argc, char** argv) {
 
     MPI_File_close(&OUT);
 
-    // for (int i = 0; i < numprocs; i++) {
-    //     if (i == myid) {
-    //         for (int j = 0; j < local_size; j++)
-    //             cout << a[j] << " --> " << b[j] << endl;
-    //     }
+    for (int i = 0; i < numprocs; i++) {
+        if (i == myid) {
+            for (unsigned j = 0; j < local_size; j++)
+                cout << a[j] << " --> " << b[j] << endl;
+        }
 
-    //     MPI_Barrier(MPI_COMM_WORLD);
-    // }
+        MPI_Barrier(MPI_COMM_WORLD);
+    }
 
 
     MPI_Finalize();
