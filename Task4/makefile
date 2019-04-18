@@ -29,11 +29,16 @@ testnH:
 	make clean
 	make
 	cp ./test/*.dat ./
-	
+
 	echo "nH" 1>input
 	mpirun --oversubscribe  -n 4 ./Task4 10 0 test_in.dat REZ_nH.dat < input
 	(cmp true_nH.dat REZ_nH.dat && echo "\e[42mEQ files!\e[0m") || echo "\e[41mNOT EQ files!\e[0m"
 	rm input
+
+testNOT:
+	make clean
+	make
+	cp ./test/*.dat ./
 
 	echo "NOT\n5" 1>input
 	mpirun --oversubscribe -n 4 ./Task4 10 0 test_in.dat REZ_NOT_5.dat < input
