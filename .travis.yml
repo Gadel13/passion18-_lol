@@ -8,6 +8,7 @@ sudo: required
  arch:
   packages:
   - openmpi
+  - cpplint
   script:
   - ./test_all.sh
 
