@@ -2,4 +2,4 @@
 
 make testing
 
-echo_green 'All tests done!'
+echo "All tests done!"
