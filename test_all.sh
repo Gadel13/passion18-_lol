@@ -5,6 +5,10 @@ echo_green(){
 
 set -e
 
+export MPICC=mpicc
+
+
+
 cd Task4
 make test
 
