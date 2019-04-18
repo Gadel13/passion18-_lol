@@ -1,5 +1,5 @@
 PROG = Task4
-CFLAGS = -Werror -Wall -fopenmp
+CFLAGS = -Werror -Wall -fopenmp -fstack-protector
 
 .PHONY: test
 
