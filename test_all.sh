@@ -6,6 +6,6 @@ echo_green(){
 set -e
 
 cd Task4
-make testing
+make test
 
  echo_green 'All tests done!'
