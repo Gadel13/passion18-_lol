@@ -8,6 +8,7 @@ services:
 arch:
   packages:
   - mpich
+  - gcc
   - cpplint
   script:
   - ./test_all.sh
