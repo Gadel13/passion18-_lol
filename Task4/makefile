@@ -17,6 +17,7 @@ clean:
 
 test:
 	make testH
+	make stestnH
 	make testNOT
 	make testCNOT
 	make testRw
