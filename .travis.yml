@@ -1,14 +1,14 @@
 sudo: required
 
-language: generic
+language: c++
 
 services:
 - docker
 
 arch:
   packages:
-  - mpich
-  - gcc
+  - openmpi
+  - g++
   - cpplint
   script:
   - ./test_all.sh
