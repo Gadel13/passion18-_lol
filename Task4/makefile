@@ -15,16 +15,21 @@ $(PROG): Task4.cpp gates.o
 clean:
 	rm -f *.o F Task4 *.dat *.txt
 
-test:
+testH:
 	make clean
 	make
 	cp ./test/*.dat ./
-	
+
 	echo "H\n5" 1>input
 	mpirun --oversubscribe -n 4 ./Task4 10 0 test_in.dat REZ_H_5.dat < input
 	cmp true_H_5.dat REZ_H_5.dat && echo "\e[42mEQ files!\e[0m" || echo "\e[41mNOT EQ files!\e[0m"
 	rm input
 
+testnH:
+	make clean
+	make
+	cp ./test/*.dat ./
+	
 	echo "nH" 1>input
 	mpirun --oversubscribe  -n 4 ./Task4 10 0 test_in.dat REZ_nH.dat < input
 	(cmp true_nH.dat REZ_nH.dat && echo "\e[42mEQ files!\e[0m") || echo "\e[41mNOT EQ files!\e[0m"

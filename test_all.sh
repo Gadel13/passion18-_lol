@@ -9,6 +9,7 @@ set -e
 
 
 cd Task4
-make test
+make testH
+make testnH
 
  echo_green 'All tests done!'
