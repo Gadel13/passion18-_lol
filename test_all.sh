@@ -10,7 +10,7 @@ set -e
 
 cd Task4
 make testH
-
+make testnH
 make testNOT
 make testCNOT
 make testRw
