@@ -13,7 +13,7 @@ make testH
 make testnH
 make testNOT
 make testCNOT
-make testRw
 make testCRw
+make testRw
 
  echo_green 'All tests done!'
