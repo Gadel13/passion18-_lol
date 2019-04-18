@@ -14,6 +14,8 @@
 
 using namespace std;
 
+
+
 void fileread(vector< complex<double> > &a, char* filename, unsigned n, int myid, unsigned int local_size, double &norma) {
      MPI_File IN;
      MPI_Status status;
