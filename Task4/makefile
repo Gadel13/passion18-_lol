@@ -33,7 +33,7 @@ testH:
 
 	(echo "H\n2" 1>input);
 	(mpirun --oversubscribe -n 4 ./Task4 5 0 test_in.dat REZ_H_2.dat < input);
-	(./eql true_H_2.dat REZ_H_2.dat && echo "\033[1;36mEQ files!\033[0m" || echo  "\033[37;1;41m NOT_EQ_files! \033[0m");
+	(./eql true_H_2.dat REZ_H_2.dat && echo -e "\033[1;36mEQ files!\033[0m" || echo -e "\033[37;1;41m NOT_EQ_files! \033[0m");
 	rm input;
 	rm true* REZ*
 
@@ -44,7 +44,7 @@ testnH:
 
 	(echo "nH" 1>input);
 	(mpirun --oversubscribe -n 4 ./Task4 5 0 test_in.dat REZ_nH.dat < input);
-	(./eql true_nH.dat REZ_nH.dat && echo "\033[1;36mEQ files!\033[0m" || echo  "\033[37;1;41m NOT_EQ_files! \033[0m");
+	(./eql true_nH.dat REZ_nH.dat && echo -e "\033[1;36mEQ files!\033[0m" || echo -e "\033[37;1;41m NOT_EQ_files! \033[0m");
 	rm input;
 	rm true* REZ*
 
@@ -55,7 +55,7 @@ testNOT:
 
 	(echo "NOT\n2" 1>input);
 	(mpirun --oversubscribe  -n 4 ./Task4 5 0 test_in.dat REZ_NOT_2.dat < input);
-	(./eql true_NOT_2.dat REZ_NOT_2.dat && echo "\033[1;36mEQ files!\033[0m" || echo  "\033[37;1;41m NOT_EQ_files! \033[0m");
+	(./eql true_NOT_2.dat REZ_NOT_2.dat && echo -e "\033[1;36mEQ files!\033[0m" || echo -e "\033[37;1;41m NOT_EQ_files! \033[0m");
 	rm input;
 	rm true* REZ*
 
@@ -66,7 +66,7 @@ testCNOT:
 
 	(echo "CNOT\n1\n4" 1>input);
 	(mpirun --oversubscribe  -n 4 ./Task4 5 0 test_in.dat REZ_CNOT_1_4.dat < input);
-	(./eql true_CNOT_1_4.dat REZ_CNOT_1_4.dat && echo "\033[1;36mEQ files!\033[0m" || echo  "\033[37;1;41m NOT_EQ_files! \033[0m");
+	(./eql true_CNOT_1_4.dat REZ_CNOT_1_4.dat && echo -e "\033[1;36mEQ files!\033[0m" || echo -e "\033[37;1;41m NOT_EQ_files! \033[0m");
 	rm input;
 	rm true* REZ*
 
@@ -77,7 +77,7 @@ testRw:
 
 	(echo "Rw\n3\n0.8" 1>input);
 	(mpirun --oversubscribe -n 4 ./Task4 5 0 test_in.dat REZ_Rw_3_08.dat < input);
-	(./eql true_Rw_3_08.dat REZ_Rw_3_08.dat && echo "\033[1;36mEQ files!\033[0m" || echo  "\033[37;1;41m NOT_EQ_files! \033[0m");
+	(./eql true_Rw_3_08.dat REZ_Rw_3_08.dat && echo -e "\033[1;36mEQ files!\033[0m" || echo -e "\033[37;1;41m NOT_EQ_files! \033[0m");
 	rm input;
 	rm true* REZ*
 
@@ -88,7 +88,7 @@ testCRw:
 
 	(echo "CRw\n2\n3\n0.5" 1>input);
 	(mpirun --oversubscribe  -n 4 ./Task4 5 0 test_in.dat REZ_CRw_2_3_05.dat < input);
-	(./eql true_CRw_2_3_05.dat REZ_CRw_2_3_05.dat && echo "\033[1;36mEQ files!\033[0m" || echo  "\033[37;1;41m NOT_EQ_files! \033[0m");
+	(./eql true_CRw_2_3_05.dat REZ_CRw_2_3_05.dat && echo -e "\033[1;36mEQ files!\033[0m" || echo -e "\033[37;1;41m NOT_EQ_files! \033[0m");
 	rm input;
 	rm true* REZ*
 
