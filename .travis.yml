@@ -1,6 +1,6 @@
 sudo: required
 
-language: c++
+language: generic
 
 services:
 - docker
@@ -8,7 +8,6 @@ services:
 arch:
   packages:
   - openmpi
-  - g++
   - cpplint
   script:
   - ./test_all.sh
