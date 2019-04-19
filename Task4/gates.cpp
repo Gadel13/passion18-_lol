@@ -5,6 +5,8 @@ using namespace std;
 
 void NOT(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, unsigned k)
 {
+	cout << "NOT GATE" << endl;
+
 	MPI_Status status;
 	int numprocs, myid;
 	MPI_Comm_size(MPI_COMM_WORLD,&numprocs);
@@ -83,6 +85,9 @@ void NOT(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n,
 
 void H(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, unsigned k)
 {
+
+	cout << "H GATE" << endl;
+
 	MPI_Status status;
 	int numprocs, myid;
 	MPI_Comm_size(MPI_COMM_WORLD,&numprocs);
@@ -161,6 +166,9 @@ void H(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, u
 
 void nH(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n)
 {
+
+	cout << "nH GATE" << endl;
+
 	MPI_Status status;
 	int numprocs, myid;
 	MPI_Comm_size(MPI_COMM_WORLD,&numprocs);
@@ -253,6 +261,7 @@ void nH(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n)
 
 void CNOT(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, unsigned control, unsigned k)
 {
+	cout << "CNOT GATE" << endl;
 	MPI_Status status;
 	int numprocs, myid;
 	MPI_Comm_size(MPI_COMM_WORLD,&numprocs);
@@ -338,6 +347,7 @@ void CNOT(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n
 
 void Rw(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, unsigned k, double fi)
 {
+	cout << "Rw GATE" << endl;
 	MPI_Status status;
 	int numprocs, myid;
 	MPI_Comm_size(MPI_COMM_WORLD,&numprocs);
@@ -417,6 +427,7 @@ void Rw(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, 
 
 void CRw(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, unsigned control, unsigned k, double fi)
 {
+	cout << "CRw GATE" << endl;
 	MPI_Status status;
 	int numprocs, myid;
 	MPI_Comm_size(MPI_COMM_WORLD,&numprocs);
