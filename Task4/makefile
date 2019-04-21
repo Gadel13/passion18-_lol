@@ -93,10 +93,10 @@ testCRw:
 	rm true* REZ* outfiles
 
 cpplint:
-	cpplint --linelength=150 --filter=-legal/copyright,-build/include_subdir,-build/namespaces,-readability/casting,-runtime Task4.cpp && echo -e "\033[1;36m Task4.cpp cpplint done\033[0m" || echo -e "\033[37;1;41m Task4.cpp cpplint fail \033[0m";
-	cpplint --linelength=150 --filter=-legal/copyright,-build/include_subdir,-build/namespaces,-readability/casting,-runtime,-build/header_guard gates.h && echo -e "\033[1;36m gates.h cpplint done\033[0m" || echo -e "\033[37;1;41m gates.h cpplint fail \033[0m";
-	cpplint --linelength=150 --filter=-legal/copyright,-build/include_subdir,-build/namespaces,-readability/casting,-runtime gates.cpp && echo -e "\033[1;36m gates.cpp cpplint done\033[0m" || echo -e "\033[37;1;41m gates.cpp cpplint fail \033[0m";
-	cpplint --linelength=150 --filter=-legal/copyright,-build/include_subdir,-build/namespaces,-readability/casting,-runtime eql.cpp && echo -e "\033[1;36m eql.cpp cpplint done\033[0m" || echo -e "\033[37;1;41m eql.cpp cpplint fail \033[0m";
+	cpplint --linelength=150 --filter=-legal/copyright,-build/include_subdir,-build/namespaces,-readability/casting,-runtime,-build/include_order Task4.cpp && echo -e "\033[1;36m Task4.cpp cpplint done\033[0m" || echo -e "\033[37;1;41m Task4.cpp cpplint fail \033[0m";
+	cpplint --linelength=150 --filter=-legal/copyright,-build/include_subdir,-build/namespaces,-readability/casting,-runtime,-build/header_guard,-build/include_order gates.h && echo -e "\033[1;36m gates.h cpplint done\033[0m" || echo -e "\033[37;1;41m gates.h cpplint fail \033[0m";
+	cpplint --linelength=150 --filter=-legal/copyright,-build/include_subdir,-build/namespaces,-readability/casting,-runtime,-build/include_order gates.cpp && echo -e "\033[1;36m gates.cpp cpplint done\033[0m" || echo -e "\033[37;1;41m gates.cpp cpplint fail \033[0m";
+	cpplint --linelength=150 --filter=-legal/copyright,-build/include_subdir,-build/namespaces,-readability/casting,-runtime,-build/include_order eql.cpp && echo -e "\033[1;36m eql.cpp cpplint done\033[0m" || echo -e "\033[37;1;41m eql.cpp cpplint fail \033[0m";
 
 
 
