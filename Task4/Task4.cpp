@@ -5,11 +5,11 @@
 #include <ctime>
 #include <cstdio>
 #include <cstdlib>
+
 #include "mpi.h"
 #include "omp.h"
 #include "string.h"
 #include "math.h"
-
 #include "gates.h"
 
 using namespace std;
@@ -79,7 +79,7 @@ int main(int argc, char** argv) {
         unsigned i;
         #pragma omp parallel private(seed, i)
         {
-            seed = (long)time_rand + myid*omp_get_num_threads() + omp_get_thread_num();
+            seed = (int64_t)time_rand + myid*omp_get_num_threads() + omp_get_thread_num();
 
             #pragma omp for reduction(+: norma)
             for (i = 0; i < local_size; i++) {
@@ -90,40 +90,39 @@ int main(int argc, char** argv) {
             }
         }
 
-    if ( strcmp(argv[3], "0") != 0 ) {
-        if ( myid == 0 ) {
-            ifstream file;
-            file.open(argv[3], ios::trunc | ios::binary | ios::out);
-            file.close();
-        }
-
-        MPI_Barrier(MPI_COMM_WORLD);
-
-        MPI_Status status;
-
-        MPI_File OUT;
-        MPI_File_open(MPI_COMM_WORLD, argv[3], MPI_MODE_WRONLY | MPI_MODE_CREATE, MPI_INFO_NULL, &OUT);
-        MPI_File_seek(OUT, myid*local_size*2*sizeof(double), MPI_SEEK_SET);
-        double *tmp_buf;
-        tmp_buf = new double[2*local_size];
-
-        #pragma omp parallel
-        {
-            #pragma omp for private(i)reduction(+: norma)
-                for (i = 0; i < local_size; i++) {
-                    tmp_buf[2*i] = a[i].real();
-                    tmp_buf[2*i + 1] = a[i].imag();
+        if ( strcmp(argv[3], "0") != 0 ) {
+            if ( myid == 0 ) {
+                ifstream file;
+                file.open(argv[3], ios::trunc | ios::binary | ios::out);
+                file.close();
             }
+
+            MPI_Barrier(MPI_COMM_WORLD);
+
+            MPI_Status status;
+
+            MPI_File OUT;
+            MPI_File_open(MPI_COMM_WORLD, argv[3], MPI_MODE_WRONLY | MPI_MODE_CREATE, MPI_INFO_NULL, &OUT);
+            MPI_File_seek(OUT, myid*local_size*2*sizeof(double), MPI_SEEK_SET);
+            double *tmp_buf;
+            tmp_buf = new double[2*local_size];
+
+            #pragma omp parallel
+            {
+                #pragma omp for private(i)reduction(+: norma)
+                    for (i = 0; i < local_size; i++) {
+                        tmp_buf[2*i] = a[i].real();
+                        tmp_buf[2*i + 1] = a[i].imag();
+                }
+            }
+
+            MPI_File_write_all(OUT, tmp_buf, local_size*2, MPI_DOUBLE, &status);
+
+            delete[] tmp_buf;
+
+            MPI_File_close(&OUT);
         }
-
-        MPI_File_write_all(OUT, tmp_buf, local_size*2, MPI_DOUBLE, &status);
-
-        delete[] tmp_buf;
-
-        MPI_File_close(&OUT);
-    }
-    } else
-    {
+    } else {
         fileread(a, argv[3], n, myid, local_size, norma);
     }
 
@@ -155,29 +154,29 @@ int main(int argc, char** argv) {
             type = 1;
             cout << "ENTER number of qbit" << endl;
             cin >> k;
-        } else
+        } else {
             if (strcmp(gate, "nH") == 0) {
                 type = 2;
-            } else
+            } else {
                 if (strcmp(gate, "NOT") == 0) {
                     type = 3;
                     cout << "ENTER number of qbit" << endl;
                     cin >> k;
-                } else
+                } else {
                     if (strcmp(gate, "CNOT") == 0) {
                         type = 4;
                         cout << "ENTER number of contr qbit" << endl;
                         cin >> contr;
                         cout << "ENTER number of qbit" << endl;
                         cin >> k;
-                    } else
+                    } else {
                         if (strcmp(gate, "Rw") == 0) {
                             type = 5;
                             cout << "ENTER number of qbit" << endl;
                             cin >> k;
                             cout << "ENTER fi" << endl;
                             cin >> fi;
-                        } else
+                        } else {
                             if (strcmp(gate, "CRw") == 0) {
                                 type = 6;
                                 cout << "ENTER number of contr qbit" << endl;
@@ -187,6 +186,11 @@ int main(int argc, char** argv) {
                                 cout << "ENTER fi" << endl;
                                 cin >> fi;
                             }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     MPI_Bcast(&type, 1, MPI_INT, 0, MPI_COMM_WORLD);
@@ -194,24 +198,28 @@ int main(int argc, char** argv) {
     MPI_Bcast(&contr, 1, MPI_UNSIGNED, 0, MPI_COMM_WORLD);
     MPI_Bcast(&fi, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
-    if (type == 1)
+    if (type == 1) {
         H(a, b, n, k);
-    else
-    {
-        if (type == 2)
+    } else {
+        if (type == 2) {
             nH(a, b, n);
-        else
-            if (type == 3)
+        } else {
+            if (type == 3) {
                 NOT(a, b, n, k);
-            else
-                if (type == 4)
+            } else {
+                if (type == 4) {
                     CNOT(a, b, n, contr, k);
-                else
-                    if (type == 5)
+                } else {
+                    if (type == 5) {
                         Rw(a, b, n, k, fi);
-                    else
-                        if (type == 6)
+                    } else {
+                        if (type == 6) {
                             CRw(a, b, n, contr, k, fi);
+                        }
+                    }
+                }
+            }
+        }
     }
 
 
@@ -231,14 +239,14 @@ int main(int argc, char** argv) {
     double *tmp_buf;
     tmp_buf = new double[2*local_size];
 
-    //#pragma omp parallel
-    //{
-      //  #pragma omp for private(i)
+    #pragma omp parallel
+    {
+        #pragma omp for private(i)
             for (i = 0; i < local_size; i++) {
                 tmp_buf[2*i] = b[i].real();
                 tmp_buf[2*i + 1] = b[i].imag();
             }
-    //}
+    }
 
     MPI_File_write_all(OUT, tmp_buf, local_size*2, MPI_DOUBLE, &status);
 

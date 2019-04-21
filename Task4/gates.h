@@ -16,4 +16,3 @@ void Rw(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, 
 void CRw(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, unsigned control, unsigned k, double fi);
 
 #endif
-

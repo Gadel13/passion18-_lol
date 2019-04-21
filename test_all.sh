@@ -9,11 +9,9 @@ set -e
 
 
 cd Task4
-make testH
-make testnH
-make testNOT
-make testCNOT
-make testCRw
-make testRw
+make test
+echo "\n\n\n\n";
+make cpplint
+echo "\n"
 
  echo_green 'All tests done!'
