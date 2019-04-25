@@ -5,7 +5,7 @@ using namespace std;
 
 
 void one_qubit(vector< complex<double> > &a, vector< complex<double> > &b, vector< vector< complex<double> > > &H, unsigned n, unsigned k) {
-   MPI_Status status;
+    MPI_Status status;
     int numprocs, myid;
     MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
     MPI_Comm_rank(MPI_COMM_WORLD, &myid);
