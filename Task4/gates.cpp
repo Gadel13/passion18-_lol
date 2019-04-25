@@ -93,11 +93,11 @@ void H(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, u
   H[1].reserve(2);
 
   H[0][0] = 1.0 / sqrt(2);
-  H[0][1] = H[0][0];
+    H[0][1] = H[0][0];
   H[1][0] = H[0][0];
   H[1][1] = -H[0][0];
 
-  ik = pow(2, n-k);
+  ik =pow(2, n-k);
 
   int flag = 1;  //  0 - cur proc, 1 - other proc
   complex<double> a_tmp;
@@ -129,8 +129,8 @@ void H(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, u
   {
     #pragma omp for private(i, a_tmp)
       for (i = 0; i < local_size; i++) {
-        if (!flag) {
-          a_tmp = a[((i + myid*local_size)^ik) % local_size];
+        if(!flag) {
+            a_tmp = a[((i + myid*local_size)^ik) % local_size];
         } else {
           a_tmp.real(tmp_buf[2*i]);
           a_tmp.imag(tmp_buf[2*i+1]);
@@ -165,12 +165,12 @@ void nH(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n) 
   H[0].reserve(2);
   H[1].reserve(2);
 
-  H[0][0] = 1.0 / sqrt(2);
+  H[0][0] = 1.0 /sqrt(2);
   H[0][1] = H[0][0];
   H[1][0] = H[0][0];
   H[1][1] = -H[0][0];
 
-  for (unsigned k = 1; k <= n; k++) {
+  for (unsigned k = 1;   k <= n; k++) {
     MPI_Barrier(MPI_COMM_WORLD);
     ik = pow(2, n-k);
 
@@ -181,7 +181,9 @@ void nH(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n) 
     int recv_addr = addr/local_size;
     if (myid == recv_addr) {
       flag = 0;
-    } else {
+    }  
+    else 
+    {
       tmp_buf = new double[2*local_size];
       tmp_buf1 = new double[2*local_size];
       unsigned i;
