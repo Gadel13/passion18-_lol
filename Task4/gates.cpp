@@ -64,7 +64,8 @@ void one_qubit(vector< complex<double> > &a, vector< complex<double> > &b, vecto
         delete[] tmp_buf;
 }
 
-void control_qubit(vector< complex<double> > &a, vector< complex<double> > &b, vector< vector< complex<double> > > &H, unsigned n, unsigned control, unsigned k) {
+void control_qubit(vector< complex<double> > &a, vector< complex<double> > &b, vector< vector< complex<double> > > &H,
+ unsigned n, unsigned control, unsigned k) {
   MPI_Status status;
   int numprocs, myid;
   MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
@@ -129,9 +130,6 @@ void control_qubit(vector< complex<double> > &a, vector< complex<double> > &b, v
 
   if (flag)
     delete[] tmp_buf;
-
-
-
 }
 
 
@@ -148,7 +146,6 @@ void NOT(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n,
   H[1][1] = 0;
 
   one_qubit(a, b, H, n, k);
-
 }
 
 void H(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, unsigned k) {
@@ -165,7 +162,6 @@ void H(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, u
   H[1][1] = -H[0][0];
 
   one_qubit(a, b, H, n, k);
-
 }
 
 void nH(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n) {
@@ -180,16 +176,21 @@ void nH(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n) 
     H[1][0] = H[0][0];
     H[1][1] = -H[0][0];
 
+    int numprocs;
+    MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
+    unsigned size = pow(2, n);
+    unsigned local_size = size/numprocs;
+    unsigned i;
+
     for (unsigned k = 1; k <= n; k++) {
         one_qubit(a, b, H, n, k);
+        #pragma omp parallel
+        {
+          #pragma omp for private(i)
+            for (i = 0; i < local_size; i++)
+               a[i] = b[i];
+        }
     }
-
-    #pragma omp parallel
-    {
-      #pragma omp for private(i)
-        for (unsigned i = 0; i < local_size; i++)
-           a[i] = b[i];
-     }
 }
 
 void CNOT(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, unsigned control, unsigned k) {
@@ -206,7 +207,6 @@ void CNOT(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n
   H[1][1] = 0;
 
   control_qubit(a, b, H, n, control, k);
-
 }
 
 void Rw(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, unsigned k, double fi) {
@@ -223,7 +223,6 @@ void Rw(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, 
   H[1][1].imag(sin(fi));
 
   one_qubit(a, b, H, n, k);
-
 }
 
 void CRw(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, unsigned control, unsigned k, double fi) {
@@ -240,5 +239,4 @@ void CRw(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n,
   H[1][1].imag(sin(fi));
 
   control_qubit(a, b, H, n, control, k);
-
 }
