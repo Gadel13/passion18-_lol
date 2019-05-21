@@ -118,9 +118,9 @@ void control_qubit(vector< complex<double> > &a, vector< complex<double> > &b, v
 
         if (icontrol & (i + myid*local_size)) {  //   if control == 1 do NOT
           if (ik & (i + myid*local_size)) {
-            b[i] = H[1][0]*a_tmp + H[1][1]*a[i];
+            b[i] = H[1][0]*a_tmp + H[0][1]*a[i];
           } else {
-            b[i] = H[0][0]*a[i] + H[0][1]*a_tmp;
+            b[i] = H[0][0]*a[i] + H[1][1]*a_tmp;
           }
         } else {
           b[i] = a[i];
