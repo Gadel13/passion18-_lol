@@ -9,6 +9,8 @@ set -e
 
 
 cd Task4
-make test
+echo "\n\n\n\n";
+make cpplint
+echo "\n"
 
- echo_green 'All tests done!'
+ echo_green 'All tests cpplint done!'

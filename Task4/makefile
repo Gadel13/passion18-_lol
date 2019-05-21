@@ -16,7 +16,7 @@ $(PROG): Task4.cpp gates.o
 
 
 clean:
-	rm -f *.o F Task4 *.dat *.txt
+	rm -f *.o F Task4 *.dat *.txt input true* REZ* outfiles
 
 test:
 	make testH
@@ -34,7 +34,7 @@ testH:
 
 	(echo "H 2" 1>input);
 	(mpirun --oversubscribe -n 4 ./Task4 5 0 test_in.dat REZ_H_2.dat < input) 1>outfiles;
-	(./eql true_H_2.dat REZ_H_2.dat && echo -e "\033[1;36mEQ files!\033[0m" || echo -e "\033[37;1;41m NOT_EQ_files! \033[0m");
+	(./eql true_H_2.dat REZ_H_2.dat && echo -e "\033[1;36m H gate EQ files!\033[0m") || (echo -e "\033[37;1;41m H gate NOT_EQ_files! \033[0m" && exit 1);
 	rm input;
 	rm true* REZ* outfiles
 
@@ -45,7 +45,7 @@ testnH:
 
 	(echo "nH" 1>input);
 	(mpirun --oversubscribe -n 4 ./Task4 5 0 test_in.dat REZ_nH.dat < input) 1>outfiles;
-	(./eql true_nH.dat REZ_nH.dat && echo -e "\033[1;36mEQ files!\033[0m" || echo -e "\033[37;1;41m NOT_EQ_files! \033[0m");
+	(./eql true_nH.dat REZ_nH.dat && echo -e "\033[1;36m nH gate EQ files!\033[0m") || (echo -e "\033[37;1;41m nH gate NOT_EQ_files! \033[0m" && exit 1);
 	rm input;
 	rm true* REZ* outfiles
 
@@ -56,7 +56,7 @@ testNOT:
 
 	(echo "NOT 2" 1>input);
 	(mpirun --oversubscribe  -n 4 ./Task4 5 0 test_in.dat REZ_NOT_2.dat < input) 1>outfiles;
-	(./eql true_NOT_2.dat REZ_NOT_2.dat && echo -e "\033[1;36mEQ files!\033[0m" || echo -e "\033[37;1;41m NOT_EQ_files! \033[0m");
+	(./eql true_NOT_2.dat REZ_NOT_2.dat && echo -e "\033[1;36m NOT gate EQ files!\033[0m") || (echo -e "\033[37;1;41m NOT gate NOT_EQ_files! \033[0m" && exit 1);
 	rm input;
 	rm true* REZ* outfiles
 
@@ -67,7 +67,7 @@ testCNOT:
 
 	(echo "CNOT 1 4" 1>input);
 	(mpirun --oversubscribe  -n 4 ./Task4 5 0 test_in.dat REZ_CNOT_1_4.dat < input) 1>outfiles;
-	(./eql true_CNOT_1_4.dat REZ_CNOT_1_4.dat && echo -e "\033[1;36mEQ files!\033[0m" || echo -e "\033[37;1;41m NOT_EQ_files! \033[0m");
+	(./eql true_CNOT_1_4.dat REZ_CNOT_1_4.dat && echo -e "\033[1;36m CNOT gate EQ files!\033[0m") || (echo -e "\033[37;1;41m CNOT gate NOT_EQ_files! \033[0m" && exit 1);
 	rm input;
 	rm true* REZ* outfiles
 
@@ -78,7 +78,7 @@ testRw:
 
 	(echo "Rw 3 0.8" 1>input);
 	(mpirun --oversubscribe -n 4 ./Task4 5 0 test_in.dat REZ_Rw_3_08.dat < input) 1>outfiles;
-	(./eql true_Rw_3_08.dat REZ_Rw_3_08.dat && echo -e "\033[1;36mEQ files!\033[0m" || echo -e "\033[37;1;41m NOT_EQ_files! \033[0m");
+	(./eql true_Rw_3_08.dat REZ_Rw_3_08.dat && echo -e "\033[1;36mEQ files!\033[0m") || (echo -e "\033[37;1;41m NOT_EQ_files! \033[0m" && exit 1);
 	rm input;
 	rm true* REZ* outfiles
 
@@ -89,15 +89,15 @@ testCRw:
 
 	(echo "CRw 2 3 0.5" 1>input);
 	(mpirun --oversubscribe  -n 4 ./Task4 5 0 test_in.dat REZ_CRw_2_3_05.dat < input) 1>outfiles;
-	(./eql true_CRw_2_3_05.dat REZ_CRw_2_3_05.dat && echo -e "\033[1;36mEQ files!\033[0m" || echo -e "\033[37;1;41m NOT_EQ_files! \033[0m");
+	(./eql true_CRw_2_3_05.dat REZ_CRw_2_3_05.dat && echo -e "\033[1;36m CRw gate EQ files!\033[0m") || (echo -e "\033[37;1;41m CRw gate NOT_EQ_files! \033[0m" && exit 1);
 	rm input;
 	rm true* REZ* outfiles
 
 cpplint:
-	cpplint --linelength=150 --filter=-legal/copyright,-build/include_subdir,-build/namespaces,-readability/casting,-runtime,-build/include_order,-build/include Task4.cpp && echo -e "\033[1;36m Task4.cpp cpplint done\033[0m" || echo -e "\033[37;1;41m Task4.cpp cpplint fail \033[0m";
-	cpplint --linelength=150 --filter=-legal/copyright,-build/include_subdir,-build/namespaces,-readability/casting,-runtime,-build/header_guard,-build/include_order,-build/include gates.h && echo -e "\033[1;36m gates.h cpplint done\033[0m" || echo -e "\033[37;1;41m gates.h cpplint fail \033[0m";
-	cpplint --linelength=150 --filter=-legal/copyright,-build/include_subdir,-build/namespaces,-readability/casting,-runtime,-build/include_order,-build/include gates.cpp && echo -e "\033[1;36m gates.cpp cpplint done\033[0m" || echo -e "\033[37;1;41m gates.cpp cpplint fail \033[0m";
-	cpplint --linelength=150 --filter=-legal/copyright,-build/include_subdir,-build/namespaces,-readability/casting,-runtime,-build/include_order,-build/include eql.cpp && echo -e "\033[1;36m eql.cpp cpplint done\033[0m" || echo -e "\033[37;1;41m eql.cpp cpplint fail \033[0m";
+	(cpplint --linelength=150 --filter=-legal/copyright,-build/include_subdir,-build/namespaces,-readability/casting,-runtime,-build/include_order,-build/include Task4.cpp && echo -e "\033[1;36m Task4.cpp cpplint done\033[0m") || (echo -e "\033[37;1;41m Task4.cpp cpplint fail \033[0m" && exit 1);
+	(cpplint --linelength=150 --filter=-legal/copyright,-build/include_subdir,-build/namespaces,-readability/casting,-runtime,-build/header_guard,-build/include_order,-build/include gates.h && echo -e "\033[1;36m gates.h cpplint done\033[0m") || (echo -e "\033[37;1;41m gates.h cpplint fail \033[0m" && exit 1);
+	(cpplint --linelength=150 --filter=-legal/copyright,-build/include_subdir,-build/namespaces,-readability/casting,-runtime,-build/include_order,-build/include gates.cpp && echo -e "\033[1;36m gates.cpp cpplint done\033[0m") || (echo -e "\033[37;1;41m gates.cpp cpplint fail \033[0m" && exit 1);
+	(cpplint --linelength=150 --filter=-legal/copyright,-build/include_subdir,-build/namespaces,-readability/casting,-runtime,-build/include_order,-build/include eql.cpp && echo -e "\033[1;36m eql.cpp cpplint done\033[0m") || (echo -e "\033[37;1;41m eql.cpp cpplint fail \033[0m" && exit 1);
 
 
 
@@ -119,7 +119,7 @@ testHm:
 
 	(echo "H 2" 1>input);
 	(mpirun -n 4 ./Task4 5 0 test_in.dat REZ_H_2.dat < input) 1>outfiles;
-	(./eql true_H_2.dat REZ_H_2.dat && echo -e "\033[1;36mEQ files!\033[0m" || echo -e "\033[37;1;41m NOT_EQ_files! \033[0m");
+	(./eql true_H_2.dat REZ_H_2.dat && echo -e "\033[1;36m H gate EQ files!\033[0m") || (echo -e "\033[37;1;41m H gate NOT_EQ_files! \033[0m" && exit 1);
 	rm input;
 	rm true* REZ* outfiles
 
@@ -130,7 +130,7 @@ testnHm:
 
 	(echo "nH" 1>input);
 	(mpirun -n 4 ./Task4 5 0 test_in.dat REZ_nH.dat < input) 1>outfiles;
-	(./eql true_nH.dat REZ_nH.dat && echo -e "\033[1;36mEQ files!\033[0m" || echo -e "\033[37;1;41m NOT_EQ_files! \033[0m");
+	(./eql true_nH.dat REZ_nH.dat && echo -e "\033[1;36m nH gate EQ files!\033[0m") || (echo -e "\033[37;1;41m nH gate NOT_EQ_files! \033[0m" && exit 1);
 	rm input;
 	rm true* REZ* outfiles
 
@@ -141,7 +141,7 @@ testNOTm:
 
 	(echo "NOT 2" 1>input);
 	(mpirun -n 4 ./Task4 5 0 test_in.dat REZ_NOT_2.dat < input) 1>outfiles;
-	(./eql true_NOT_2.dat REZ_NOT_2.dat && echo -e "\033[1;36mEQ files!\033[0m" || echo -e "\033[37;1;41m NOT_EQ_files! \033[0m");
+	(./eql true_NOT_2.dat REZ_NOT_2.dat && echo -e "\033[1;36m NOT gate EQ files!\033[0m") || (echo -e "\033[37;1;41m NOT gate NOT_EQ_files! \033[0m" && exit 1);
 	rm input;
 	rm true* REZ* outfiles
 
@@ -152,7 +152,7 @@ testCNOTm:
 
 	(echo "CNOT 1 4" 1>input);
 	(mpirun -n 4 ./Task4 5 0 test_in.dat REZ_CNOT_1_4.dat < input) 1>outfiles;
-	(./eql true_CNOT_1_4.dat REZ_CNOT_1_4.dat && echo -e "\033[1;36mEQ files!\033[0m" || echo -e "\033[37;1;41m NOT_EQ_files! \033[0m");
+	(./eql true_CNOT_1_4.dat REZ_CNOT_1_4.dat && echo -e "\033[1;36m CNOT gate EQ files!\033[0m") || (echo -e "\033[37;1;41m CNOT gate NOT_EQ_files! \033[0m" && exit 1);
 	rm input;
 	rm true* REZ* outfiles
 
@@ -163,7 +163,7 @@ testRwm:
 
 	(echo "Rw 3 0.8" 1>input);
 	(mpirun -n 4 ./Task4 5 0 test_in.dat REZ_Rw_3_08.dat < input) 1>outfiles;
-	(./eql true_Rw_3_08.dat REZ_Rw_3_08.dat && echo -e "\033[1;36mEQ files!\033[0m" || echo -e "\033[37;1;41m NOT_EQ_files! \033[0m");
+	(./eql true_Rw_3_08.dat REZ_Rw_3_08.dat && echo -e "\033[1;36mEQ files!\033[0m") || (echo -e "\033[37;1;41m NOT_EQ_files! \033[0m" && exit 1);
 	rm input;
 	rm true* REZ* outfiles
 
@@ -174,7 +174,7 @@ testCRwm:
 
 	(echo "CRw 2 3 0.5" 1>input);
 	(mpirun -n 4 ./Task4 5 0 test_in.dat REZ_CRw_2_3_05.dat < input) 1>outfiles;
-	(./eql true_CRw_2_3_05.dat REZ_CRw_2_3_05.dat && echo -e "\033[1;36mEQ files!\033[0m" || echo -e "\033[37;1;41m NOT_EQ_files! \033[0m");
+	(./eql true_CRw_2_3_05.dat REZ_CRw_2_3_05.dat && echo -e "\033[1;36m CRw gate EQ files!\033[0m") || (echo -e "\033[37;1;41m CRw gate NOT_EQ_files! \033[0m" && exit 1);
 	rm input;
 	rm true* REZ* outfiles
 

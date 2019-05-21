@@ -21,9 +21,9 @@ void one_qubit(vector< complex<double> > &a, vector< complex<double> > &b, vecto
 
     int addr = (myid*local_size)^ik;
     int recv_addr = addr/local_size;
-    if (myid == recv_addr){
+    if (myid == recv_addr) {
       flag = 0;
-    } else{
+    } else {
     tmp_buf = new double[2*local_size];
     tmp_buf1 = new double[2*local_size];
     unsigned i;
@@ -31,9 +31,9 @@ void one_qubit(vector< complex<double> > &a, vector< complex<double> > &b, vecto
     #pragma omp parallel
     {
         #pragma omp for private(i)
-        for(i = 0; i < local_size; i++) {
-          tmp_buf1[2*i] = a[i].real();
-            tmp_buf1[2*i+ 1] = a[i].imag();
+        for (i = 0; i < local_size; i++) {
+            tmp_buf1[2*i] = a[i].real();
+            tmp_buf1[2*i + 1] = a[i].imag();
         }
     }
 
@@ -109,14 +109,14 @@ void control_qubit(vector< complex<double> > &a, vector< complex<double> > &b, v
   {
     #pragma omp for private(i, a_tmp)
       for (i = 0; i < local_size; i++) {
-        if(!flag) {
-            a_tmp = a[((i + myid*local_size)^ik) % local_size];
+        if (!flag) {
+          a_tmp = a[((i + myid*local_size)^ik) % local_size];
         } else {
           a_tmp.real(tmp_buf[2*i]);
           a_tmp.imag(tmp_buf[2*i+1]);
         }
 
-        if (icontrol & (i + myid*local_size)) {  //   if control == 1 do NOT
+        if (icontrol & (i + myid*local_size)) {  //   if control == 1 do
           if (ik & (i + myid*local_size)) {
             b[i] = H[1][0]*a_tmp + H[1][1]*a[i];
           } else {
@@ -134,8 +134,6 @@ void control_qubit(vector< complex<double> > &a, vector< complex<double> > &b, v
 
 
 void NOT(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, unsigned k) {
-  cout << "NOT GATE" << endl;
-
   vector< vector<complex<double> > > H(2);
   H[0].reserve(2);
   H[1].reserve(2);
@@ -149,14 +147,11 @@ void NOT(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n,
 }
 
 void H(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, unsigned k) {
-  cout << "H GATE" << endl;
-
-
   vector< vector<complex<double> > > H(2);
   H[0].reserve(2);
   H[1].reserve(2);
 
-  H[0][0] = 1.0 /sqrt(2);
+  H[0][0] = 1.0 / sqrt(2);
   H[0][1] = H[0][0];
   H[1][0] = H[0][0];
   H[1][1] = -H[0][0];
@@ -165,8 +160,6 @@ void H(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, u
 }
 
 void nH(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n) {
-    cout << "nH GATE" << endl;
-
     vector< vector<complex<double> > > H(2);
     H[0].reserve(2);
     H[1].reserve(2);
@@ -194,8 +187,6 @@ void nH(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n) 
 }
 
 void CNOT(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, unsigned control, unsigned k) {
-  cout << "CNOT GATE" << endl;
-
   vector< vector<complex<double> > > H(2);
   H[0].reserve(2);
   H[1].reserve(2);
@@ -210,8 +201,6 @@ void CNOT(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n
 }
 
 void Rw(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, unsigned k, double fi) {
-  cout << "Rw GATE" << endl;
-
   vector< vector<complex<double> > > H(2);
   H[0].reserve(2);
   H[1].reserve(2);
@@ -226,15 +215,13 @@ void Rw(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, 
 }
 
 void CRw(vector< complex<double> > &a, vector< complex<double> > &b, unsigned n, unsigned control, unsigned k, double fi) {
-  cout << "CRw GATE" << endl;
-
   vector< vector<complex<double> > > H(2);
   H[0].reserve(2);
   H[1].reserve(2);
 
   H[0][0] = 1;
-  H[0][1]  = 0;
-  H[1 ][0] = 0;
+  H[0][1] = 0;
+  H[1][0] = 0;
   H[1][1].real(cos(fi));
   H[1][1].imag(sin(fi));
 
